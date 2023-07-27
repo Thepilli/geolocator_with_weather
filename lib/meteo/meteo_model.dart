@@ -1,12 +1,12 @@
-class WeatherModel {
+class MeteoModel {
   final currentWeather;
   final hourly;
 
-  WeatherModel({required this.currentWeather, required this.hourly});
-  factory WeatherModel.fromJson(Map<String, dynamic> data) {
+  MeteoModel({required this.currentWeather, required this.hourly});
+  factory MeteoModel.fromJson(Map<String, dynamic> data) {
     final currentWeather = data["current_weather"] as Map<String, dynamic>;
     final hourly = data["hourly"] as Map<String, dynamic>;
-    return WeatherModel(currentWeather: currentWeather, hourly: hourly);
+    return MeteoModel(currentWeather: currentWeather, hourly: hourly);
   }
 }
 

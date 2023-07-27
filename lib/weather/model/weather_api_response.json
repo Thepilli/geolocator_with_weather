@@ -1,0 +1,41 @@
+{
+  "location": {
+    "name": "Prague",
+    "region": "Hlavni mesto Praha",
+    "country": "Czech Republic",
+    "lat": 50.08,
+    "lon": 14.47,
+    "tz_id": "Europe/Prague",
+    "localtime_epoch": 1690430911,
+    "localtime": "2023-07-27 6:08"
+  },
+  "current": {
+    "last_updated_epoch": 1690430400,
+    "last_updated": "2023-07-27 06:00",
+    "temp_c": 11.0,
+    "temp_f": 51.8,
+    "is_day": 1,
+    "condition": {
+      "text": "Sunny",
+      "icon": "//cdn.weatherapi.com/weather/64x64/day/113.png",
+      "code": 1000
+    },
+    "wind_mph": 9.4,
+    "wind_kph": 15.1,
+    "wind_degree": 210,
+    "wind_dir": "SSW",
+    "pressure_mb": 1014.0,
+    "pressure_in": 29.94,
+    "precip_mm": 0.0,
+    "precip_in": 0.0,
+    "humidity": 87,
+    "cloud": 0,
+    "feelslike_c": 9.7,
+    "feelslike_f": 49.4,
+    "vis_km": 10.0,
+    "vis_miles": 6.0,
+    "uv": 4.0,
+    "gust_mph": 10.1,
+    "gust_kph": 16.2
+  }
+}

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:meteo_app/weather_client.dart';
-import 'package:meteo_app/weather_model.dart';
+import 'package:meteo_app/meteo/meteo_client.dart';
+import 'package:meteo_app/meteo/meteo_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  WeatherModel? weather;
+  MeteoModel? weather;
   List<dynamic>? hourlyTemp;
   List<Widget>? hourlyCast;
   List<dynamic>? hourlyDate;
@@ -39,7 +39,8 @@ class _HomePageState extends State<HomePage> {
 
   _getAddressFromCoordinates() async {
     try {
-      List<Placemark> placemark = await placemarkFromCoordinates((currentPosition!.latitude), currentPosition!.longitude);
+      List<Placemark> placemark = await placemarkFromCoordinates(
+          (currentPosition!.latitude), currentPosition!.longitude);
       Placemark place = placemark[0];
       setState(() {
         currentAddress = "${place.locality}, ${place.country}";
@@ -60,7 +61,8 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text('Your geo coordinates'),
-                Text("Latitude: ${currentPosition?.latitude}  X  Longitude: ${currentPosition?.longitude} "),
+                Text(
+                    "Latitude: ${currentPosition?.latitude}  X  Longitude: ${currentPosition?.longitude} "),
                 const SizedBox(height: 20),
                 const Text('Your address'),
                 Text(currentAddress),
@@ -81,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                 MaterialButton(
                   color: Colors.amber,
                   onPressed: () async {
-                    weather = await WeatherClient().request();
+                    weather = await MeteoClient().request();
                     print(weather?.currentWeather);
                     hourlyTemp = weather?.hourly['temperature_2m'];
                     hourlyDate = weather?.hourly['time'];
@@ -112,10 +114,14 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Column(
-                          children: hourlyCastDate == null ? [const Text('empty')] : hourlyCastDate!,
+                          children: hourlyCastDate == null
+                              ? [const Text('empty')]
+                              : hourlyCastDate!,
                         ),
                         Column(
-                          children: hourlyCast == null ? [const Text('empty')] : hourlyCast!,
+                          children: hourlyCast == null
+                              ? [const Text('empty')]
+                              : hourlyCast!,
                         ),
                       ],
                     ),
