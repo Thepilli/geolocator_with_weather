@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meteo_app/weather/home_page_weather.dart';
+import 'package:meteo_app/rive_column/rive_water_column.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePageWeather(),
+      home: const RiveWaterColumn(),
     );
   }
 }
