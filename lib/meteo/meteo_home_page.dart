@@ -4,14 +4,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:meteo_app/meteo/meteo_client.dart';
 import 'package:meteo_app/meteo/meteo_model.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class MeteoHomePage extends StatefulWidget {
+  const MeteoHomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MeteoHomePage> createState() => _MeteoHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _MeteoHomePageState extends State<MeteoHomePage> {
   MeteoModel? weather;
   List<dynamic>? hourlyTemp;
   List<Widget>? hourlyCast;
@@ -39,8 +39,7 @@ class _HomePageState extends State<HomePage> {
 
   _getAddressFromCoordinates() async {
     try {
-      List<Placemark> placemark = await placemarkFromCoordinates(
-          (currentPosition!.latitude), currentPosition!.longitude);
+      List<Placemark> placemark = await placemarkFromCoordinates((currentPosition!.latitude), currentPosition!.longitude);
       Placemark place = placemark[0];
       setState(() {
         currentAddress = "${place.locality}, ${place.country}";
@@ -61,8 +60,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text('Your geo coordinates'),
-                Text(
-                    "Latitude: ${currentPosition?.latitude}  X  Longitude: ${currentPosition?.longitude} "),
+                Text("Latitude: ${currentPosition?.latitude}  X  Longitude: ${currentPosition?.longitude} "),
                 const SizedBox(height: 20),
                 const Text('Your address'),
                 Text(currentAddress),
@@ -114,14 +112,10 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Column(
-                          children: hourlyCastDate == null
-                              ? [const Text('empty')]
-                              : hourlyCastDate!,
+                          children: hourlyCastDate == null ? [const Text('empty')] : hourlyCastDate!,
                         ),
                         Column(
-                          children: hourlyCast == null
-                              ? [const Text('empty')]
-                              : hourlyCast!,
+                          children: hourlyCast == null ? [const Text('empty')] : hourlyCast!,
                         ),
                       ],
                     ),

@@ -7,14 +7,14 @@ import 'package:intl/intl.dart';
 import 'package:meteo_app/weather/model/weather_model.dart';
 import 'package:meteo_app/weather/service/weather_service.dart';
 
-class HomePageWeather extends StatefulWidget {
-  const HomePageWeather({super.key});
+class WeatherHomePage extends StatefulWidget {
+  const WeatherHomePage({super.key});
 
   @override
-  State<HomePageWeather> createState() => _HomePageWeatherState();
+  State<WeatherHomePage> createState() => _WeatherHomePageState();
 }
 
-class _HomePageWeatherState extends State<HomePageWeather> {
+class _WeatherHomePageState extends State<WeatherHomePage> {
   WeatherService weatherService = WeatherService();
   WeatherModel weather = WeatherModel();
 
@@ -93,7 +93,6 @@ class _HomePageWeatherState extends State<HomePageWeather> {
                     children: [
                       Image.network(
                         'https:$currentWeatherIcon',
-                        scale: .6,
                       ),
                       Text('${temperatureC.toString()} ℃',
                           style: GoogleFonts.poppins(color: Colors.white, fontSize: width / 10, fontWeight: FontWeight.bold)),

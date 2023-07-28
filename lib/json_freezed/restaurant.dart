@@ -14,6 +14,5 @@ class Restaurant with _$Restaurant {
     @Default([]) List<Review> reviews,
   }) = _Restaurant;
 
-  factory Restaurant.fromJson(Map<String, dynamic> json) =>
-      _$RestaurantFromJson(json);
+  factory Restaurant.fromJson(Map<String, dynamic> json) => _$RestaurantFromJson(json);
 }
