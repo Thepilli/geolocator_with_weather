@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:meteo_app/json_freezed/gorouter/pages/about.dart';
-import 'package:meteo_app/json_freezed/gorouter/pages/contact_us.dart';
-import 'package:meteo_app/json_freezed/gorouter/pages/home.dart';
-import 'package:meteo_app/json_freezed/gorouter/pages/profile.dart';
+import 'package:meteo_app/gorouter/pages/about.dart';
+import 'package:meteo_app/gorouter/pages/contact_us.dart';
+import 'package:meteo_app/gorouter/pages/home.dart';
+import 'package:meteo_app/gorouter/pages/profile.dart';
 
 void main() {
   runApp(const MyApp());
