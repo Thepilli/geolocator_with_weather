@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:meteo_app/weather/model/weather_model.dart';
+import 'package:meteo_app/constants/applystyle.dart';
+import 'package:meteo_app/constants/colors.dart';
+import 'package:meteo_app/weather/glass_box.dart';
+import 'package:meteo_app/weather/model/weather_forecast_model.dart';
 import 'package:meteo_app/weather/service/weather_service.dart';
 
 class WeatherHomePage extends StatefulWidget {
@@ -16,23 +20,16 @@ class WeatherHomePage extends StatefulWidget {
 
 class _WeatherHomePageState extends State<WeatherHomePage> {
   WeatherService weatherService = WeatherService();
-  WeatherModel weather = WeatherModel();
+  WeatherForecast forecast = WeatherForecast();
+  bool isDataLoaded = false;
 
-  double temperatureC = 0;
-  double temperatureF = 0;
-  double uv = 0;
-  double windKPH = 0;
-  String currentWeather = '';
-  String currentWeatherIcon = '';
-  String locationName = '';
-  String locationCountry = '';
-  int isDay = 0;
   DateTime now = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    getWeather();
+    getForecast();
+    Future.delayed(const Duration(seconds: 2), () => isDataLoaded = true);
     Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         now = DateTime.now();
@@ -40,20 +37,13 @@ class _WeatherHomePageState extends State<WeatherHomePage> {
     });
   }
 
-  void getWeather() async {
-    weather = await weatherService.getWeatherData('Prague');
+  String formatDate(DateTime date) {
+    final formatter = DateFormat.yMMMMd('en_US');
+    return formatter.format(date);
+  }
 
-    setState(() {
-      temperatureC = weather.temperatureC;
-      temperatureF = weather.temperatureF;
-      uv = weather.uv;
-      windKPH = weather.windKPH;
-      currentWeather = weather.condition;
-      currentWeatherIcon = weather.conditionIcon;
-      locationName = weather.location;
-      locationCountry = weather.country;
-      isDay = weather.isDay;
-    });
+  void getForecast() async {
+    forecast = await weatherService.getForecastData('Prague');
   }
 
   @override
@@ -69,7 +59,7 @@ class _WeatherHomePageState extends State<WeatherHomePage> {
             decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage(
-                    isDay == 1 ? 'assets/images/day.jpg' : 'assets/images/night.jpg',
+                    forecast.current?.isDay == 1 ? 'assets/images/day.jpg' : 'assets/images/night.jpg',
                   ),
                   fit: BoxFit.cover),
             ),
@@ -85,33 +75,85 @@ class _WeatherHomePageState extends State<WeatherHomePage> {
               child: Column(
                 children: [
                   Text(
-                    currentWeather,
-                    style: GoogleFonts.poppins(height: 1, color: Colors.white, fontSize: width / 10, fontWeight: FontWeight.w600),
+                    (forecast.current?.condition?.text).toString(),
+                    style: appstyle(40, AppColors.whiteColor, FontWeight.w200),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.network(
-                        'https:$currentWeatherIcon',
-                      ),
-                      Text('${temperatureC.toString()} ℃',
-                          style: GoogleFonts.poppins(color: Colors.white, fontSize: width / 10, fontWeight: FontWeight.bold)),
-                    ],
+                  SizedBox(
+                    height: 100,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        isDataLoaded
+                            ? CachedNetworkImage(
+                                imageUrl: 'https:${forecast.current?.condition?.icon}',
+                                height: 100,
+                                fit: BoxFit.cover,
+                              )
+                            : const CircularProgressIndicator(),
+                        Text(
+                          '${forecast.current?.tempC} ℃',
+                          style: appstyle(50, AppColors.whiteColor, FontWeight.w200),
+                        ),
+                      ],
+                    ),
                   ),
-                  Text('$locationName, $locationCountry',
-                      style: GoogleFonts.poppins(color: Colors.white, fontSize: width / 15, fontWeight: FontWeight.w200)),
-                  const Spacer(),
                   Text(
-                    '${uv.toString()} UV | ${windKPH.toString()} KPH',
-                    style: GoogleFonts.poppins(color: Colors.white, fontSize: width / 14, fontWeight: FontWeight.w200),
+                    '${forecast.location?.name}, ${forecast.location?.country}',
+                    style: appstyle(12, AppColors.whiteColor, FontWeight.w200),
+                  ),
+                  const Spacer(),
+                  isDataLoaded
+                      ? SizedBox(
+                          height: 200,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: forecast.forecast?.forecastday?.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: GlassBox(
+                                  height: 200.0.h,
+                                  width: 110.0.w,
+                                  child: Center(
+                                    child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        DateFormat.E().format(DateTime.fromMillisecondsSinceEpoch(
+                                            (forecast.forecast?.forecastday?[index].dateEpoch)! * 1000)),
+                                        style: appstyle(20, AppColors.whiteColor, FontWeight.w200),
+                                      ),
+                                      CachedNetworkImage(
+                                          imageUrl: 'https:${forecast.forecast?.forecastday?[index].day?.condition?.icon}'),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        'Highs: ${forecast.forecast?.forecastday?[index].day?.maxtempC}',
+                                        style: appstyle(12, AppColors.whiteColor, FontWeight.w200),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Text(
+                                        'Lows: ${forecast.forecast?.forecastday?[index].day?.mintempC}',
+                                        style: appstyle(12, AppColors.whiteColor, FontWeight.w200),
+                                      ),
+                                    ]),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : const CircularProgressIndicator(),
+                  Text(
+                    '${forecast.current?.uv} UV | ${forecast.current?.windKph} KPH',
+                    style: appstyle(25, AppColors.whiteColor, FontWeight.w200),
                   ),
                   Text(
                     DateFormat('EEE, dd MMM').format(now),
-                    style: GoogleFonts.poppins(height: 1, color: Colors.white, fontSize: width / 10, fontWeight: FontWeight.w600),
+                    style: appstyle(25, AppColors.whiteColor, FontWeight.w200),
                   ),
                   Text(
                     DateFormat('HH:mm:ss').format(now),
-                    style: GoogleFonts.poppins(height: 1, color: Colors.white, fontSize: width / 10, fontWeight: FontWeight.w600),
+                    style: appstyle(25, AppColors.whiteColor, FontWeight.w200),
                   ),
                 ],
               ),

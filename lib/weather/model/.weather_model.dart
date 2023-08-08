@@ -8,18 +8,19 @@ class WeatherModel {
   final String location;
   final String country;
   final int isDay;
+  final int localTimeEpoch;
 
-  WeatherModel({
-    this.temperatureC = 0,
-    this.temperatureF = 0,
-    this.uv = 0,
-    this.windKPH = 0,
-    this.condition = "Sunny",
-    this.conditionIcon = "",
-    this.location = "",
-    this.country = "",
-    this.isDay = 0,
-  });
+  WeatherModel(
+      {this.temperatureC = 0,
+      this.temperatureF = 0,
+      this.uv = 0,
+      this.windKPH = 0,
+      this.condition = "Sunny",
+      this.conditionIcon = "",
+      this.location = "",
+      this.country = "",
+      this.isDay = 0,
+      this.localTimeEpoch = 0});
 
   factory WeatherModel.fromJson(Map<String, dynamic> json) {
     return WeatherModel(
@@ -32,6 +33,7 @@ class WeatherModel {
       location: json['location']['name'],
       country: json['location']['country'],
       isDay: json['current']['is_day'],
+      localTimeEpoch: json['location']['localtime_epoch'],
     );
   }
 }
